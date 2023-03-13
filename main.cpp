@@ -21,8 +21,8 @@ std::string Encrypt(std::string &message, int key) {
     std::string result;
     for (int c: message) {
         if (std::isalpha(c)) {
-            c = toupper(c);
-            c = (((c - 'A') + key + 26) % 26) + 'A';
+            c = c;
+            c = (((c - 'a') + key + 26) % 26) + 'a';
         }
         result += c;
     }
@@ -35,8 +35,8 @@ std::string Decrypt(const std::string &message, int key) {
     std::string result;
     for (int c: message) {
         if (isalpha(c)) {
-            c = toupper(c);
-            c = (((c - 'A') - key + 26) % 26) + 'A';
+            c = c;
+            c = (((c - 'a') - key + 26) % 26) + 'a';
         }
         result += c;
     }
@@ -54,12 +54,14 @@ int main() {
     int key, chosen;
     std::cout << "enter 1 for encryption otherwise anything else ";
     std::cin >> chosen;
+    std::string input;
+    std::cout << "\nenter input file name: ";
+    std::cin >> input;
     std::cout << "\nplease enter encryption key: ";
     std::cin >> key;
-    std::string input;
-    std::cout << "enter input file name: ";
-    std::cin >> input;
-    std::string output = "Out";
+    std::cout << "\nenter output file name: ";
+    std::string output;
+    std::cin >> output;
     std::ifstream in(input + ".txt");
     std::ofstream out(output + ".txt");
     try {
@@ -74,11 +76,7 @@ int main() {
                 out << Encrypt(str, key) << std::endl;
             else out << Decrypt(str, key) << std::endl;
             out.close();
-//            char pathFile[MAX_PATH];
-//            GetModuleFileName(NULL, pathFile, MAX_PATH);
-            std::filesystem::path filePath = std::filesystem::current_path()/(output+".txt");
-//           std::string  ff = Fpos.string()+"\\"+output+".txt";
-//            const char *filePath = ff.c_str();
+            std::filesystem::path filePath = std::filesystem::current_path() / (output + ".txt");
             std::cout << "File path: " << filePath << std::endl;
             ShellExecute(NULL, "open", filePath.string().c_str(), NULL, NULL, SW_SHOWNORMAL);
         } else throw err;
